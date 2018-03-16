@@ -141,6 +141,12 @@ public class CompileKotlinAgainstKotlinTestGenerated extends AbstractCompileKotl
         runTest("compiler/testData/compileKotlinAgainstKotlin/jvmFieldInConstructor.kt");
     }
 
+    @TestMetadata("jvmFieldInInterfaceCompanion.kt")
+    public void testJvmFieldInInterfaceCompanion() throws Exception {
+        String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/compileKotlinAgainstKotlin/jvmFieldInInterfaceCompanion.kt");
+        doTest(fileName);
+    }
+
     @TestMetadata("jvmNames.kt")
     public void testJvmNames() throws Exception {
         runTest("compiler/testData/compileKotlinAgainstKotlin/jvmNames.kt");

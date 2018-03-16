@@ -10427,6 +10427,12 @@ public class JsCodegenBoxTestGenerated extends AbstractJsCodegenBoxTest {
             doTest(fileName);
         }
 
+        @TestMetadata("interfaceCompanionWithKotlin.kt")
+        public void testInterfaceCompanionWithKotlin() throws Exception {
+            String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/jvmField/interfaceCompanionWithKotlin.kt");
+            doTest(fileName);
+        }
+
         @TestMetadata("interfaceWithConst.kt")
         public void testInterfaceWithConst() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/jvmField/interfaceWithConst.kt");
