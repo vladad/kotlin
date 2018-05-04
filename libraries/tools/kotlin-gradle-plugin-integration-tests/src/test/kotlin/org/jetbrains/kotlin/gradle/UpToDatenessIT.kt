@@ -72,7 +72,19 @@ class UpToDateIT : BaseGradleIT() {
         override fun initProject(project: Project) = with(project) {
             buildGradle.appendText("\nprintln 'compiler_cp=' + compileKotlin.getComputedCompilerClasspath\$kotlin_gradle_plugin()")
             build("clean") { originalCompilerCp = "compiler_cp=\\[(.*)]".toRegex().find(output)!!.groupValues[1].split(", ") }
-            buildGradle.appendText("\ncompileKotlin.compilerClasspath = files($originalPaths).toList()")
+            buildGradle.appendText("""${'\n'}
+                // Add Kapt to the project to test its input checks as well:
+                apply plugin: 'kotlin-kapt'
+                dependencies {
+                    compile "org.jetbrains.kotlin:annotation-processor-example:${'$'}kotlin_version"
+                    kapt "org.jetbrains.kotlin:annotation-processor-example:${'$'}kotlin_version"
+                }
+
+                compileKotlin.compilerClasspath = files($originalPaths).toList()
+                afterEvaluate {
+                    kaptGenerateStubsKotlin.compilerClasspath = files($originalPaths).toList()
+                }
+            """.trimIndent())
         }
 
         override fun mutateProject(project: Project) = with(project) {
@@ -88,7 +100,7 @@ class UpToDateIT : BaseGradleIT() {
         }
 
         override fun checkAfterRebuild(compiledProject: CompiledProject) = with(compiledProject) {
-            assertTasksExecuted(listOf(":compileKotlin"))
+            assertTasksExecuted(listOf(":compileKotlin", ":kaptGenerateStubsKotlin", ":kaptKotlin"))
         }
     }
 
