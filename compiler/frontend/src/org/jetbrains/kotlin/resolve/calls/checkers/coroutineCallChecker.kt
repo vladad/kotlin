@@ -18,6 +18,7 @@ import org.jetbrains.kotlin.descriptors.PropertyGetterDescriptor
 import org.jetbrains.kotlin.diagnostics.DiagnosticSink
 import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.psi.KtCallableReferenceExpression
 import org.jetbrains.kotlin.psi.KtExpression
 import org.jetbrains.kotlin.psi.KtThisExpression
 import org.jetbrains.kotlin.resolve.BindingContext
@@ -63,6 +64,8 @@ object CoroutineSuspendCallChecker : CallChecker {
                     it.ownerDescriptor.safeAs<FunctionDescriptor>()?.isSuspend == true
         }?.cast<LexicalScope>()?.ownerDescriptor?.cast<FunctionDescriptor>()
 
+        val isCallableReference = resolvedCall.call.callElement.parent is KtCallableReferenceExpression
+
         when {
             enclosingSuspendFunction != null -> {
                 val callElement = resolvedCall.call.callElement as KtExpression
@@ -80,6 +83,9 @@ object CoroutineSuspendCallChecker : CallChecker {
                 )
 
                 checkRestrictsSuspension(enclosingSuspendFunction, resolvedCall, reportOn, context)
+            }
+            isCallableReference -> {
+                // do nothing: we can get callable reference to suspend function outside suspend context
             }
             else -> {
                 when (descriptor) {
