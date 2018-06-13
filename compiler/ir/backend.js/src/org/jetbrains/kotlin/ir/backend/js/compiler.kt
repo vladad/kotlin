@@ -67,4 +67,5 @@ fun JsIrBackendContext.lower(file: IrFile) {
     SecondaryCtorLowering(this).runOnFilePostfix(file)
     CallableReferenceLowering(this).lower(file)
     IntrinsicifyCallsLowering(this).lower(file)
+    StdlibCallsLowering(this).lower(file)
 }
