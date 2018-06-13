@@ -7,20 +7,15 @@ package org.jetbrains.kotlin.ir.backend.js.transformers.irToJs
 
 import com.google.gwt.dev.js.ThrowExceptionOnErrorReporter
 import org.jetbrains.kotlin.ir.IrElement
-import org.jetbrains.kotlin.ir.expressions.IrCall
-import org.jetbrains.kotlin.ir.expressions.IrConst
-import org.jetbrains.kotlin.ir.expressions.IrExpression
-import org.jetbrains.kotlin.ir.expressions.IrStringConcatenation
+import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
 import org.jetbrains.kotlin.ir.visitors.acceptVoid
 import org.jetbrains.kotlin.js.backend.ast.*
 import org.jetbrains.kotlin.js.parser.parse
 
-
 fun translateJsCode(call: IrCall, scope: JsScope): JsNode {
     //TODO check non simple compile time constants (expressions)
-
     fun foldString(expression: IrExpression): String {
         val builder = StringBuilder()
         expression.acceptVoid(object : IrElementVisitorVoid {
@@ -38,11 +33,13 @@ fun translateJsCode(call: IrCall, scope: JsScope): JsNode {
 
     val code = call.getValueArgument(0)!!
     val statements = parseJsCode(code.run(::foldString), JsFunctionScope(scope, "<js-code>")).orEmpty()
+
+
     val size = statements.size
 
     return when (size) {
         0 -> JsEmpty
-        1 -> statements[0].let { (it as? JsExpressionStatement)?.expression ?: it }
+        1 -> statements[0].let { if (it is JsExpressionStatement) it.expression else it }
         else -> JsBlock(statements)
     }
 }

@@ -172,7 +172,7 @@ class IntrinsicifyCallsLowering(private val context: JsIrBackendContext) : FileL
 }
 
 // TODO extract to common place?
-private fun irCall(call: IrCall, newSymbol: IrFunctionSymbol, dispatchReceiverAsFirstArgument: Boolean = false): IrCall =
+fun irCall(call: IrCall, newSymbol: IrFunctionSymbol, dispatchReceiverAsFirstArgument: Boolean = false): IrCall =
     call.run {
         IrCallImpl(
             startOffset,
