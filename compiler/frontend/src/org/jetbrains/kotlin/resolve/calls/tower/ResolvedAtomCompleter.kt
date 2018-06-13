@@ -215,7 +215,8 @@ class ResolvedAtomCompleter(
             is FunctionDescriptor -> doubleColonExpressionResolver.bindFunctionReference(
                 callableReferenceExpression,
                 resultType,
-                topLevelCallContext
+                topLevelCallContext,
+                callableCandidate.candidate as FunctionDescriptor
             )
             is PropertyDescriptor -> doubleColonExpressionResolver.bindPropertyReference(
                 callableReferenceExpression,
