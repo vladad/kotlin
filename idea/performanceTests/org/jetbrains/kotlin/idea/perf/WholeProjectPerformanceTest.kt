@@ -130,4 +130,11 @@ abstract class WholeProjectPerformanceTest : DaemonAnalyzerTestCase(), WholeProj
         val Long.nsToMs get() = (this * 1e-6).toLong()
     }
 
+    override fun tearDown() {
+        try {
+            super.tearDown()
+        } finally {
+            System.gc()
+        }
+    }
 }
