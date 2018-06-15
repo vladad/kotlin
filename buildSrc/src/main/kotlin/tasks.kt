@@ -46,6 +46,8 @@ fun Project.projectTest(taskName: String = "test", body: Test.() -> Unit = {}): 
             val classFileNameWithoutExtension = maybeClassFqName.replace('.', '/')
             val classFileName = classFileNameWithoutExtension + ".class"
 
+            filter.includePatterns.add("$pattern\$*")
+
             include {
                 val path = it.path
                 if (it.isDirectory) {
