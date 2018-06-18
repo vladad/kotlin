@@ -155,6 +155,9 @@ projectTest(taskName = "performanceTest") {
 
     maxHeapSize = "3g"
     jvmArgs("-XX:SoftRefLRUPolicyMSPerMB=50")
+    jvmArgs("-XX:+UnlockCommercialFeatures", "-XX:+FlightRecorder")
+    jvmArgs("-XX:StartFlightRecording=delay=15m,duration=3h,filename=perf.jfr")
+
 
     doFirst {
         systemProperty("idea.home.path", intellijRootDir().canonicalPath)
